@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 
 //information for each individual book
@@ -232,13 +233,11 @@ class Menu{
     private static void MenuEditAuthor(Book book, List<Book> list){
         Console.WriteLine("\nWhat would you like to change the author of this entry to?");
         book.Author = Console.ReadLine();
-
     }
 
     private static void MenuEditProgress(Book book, List<Book> list){
         Console.WriteLine("\n");
         book.Progress = ObtainProgress();
-
     }
 
 
@@ -287,6 +286,29 @@ class Menu{
                 Console.WriteLine("Exiting...");
                 Environment.Exit(0);
                 break;  
+        }
+
+        static bool TryReadLine(out string result){
+            var buf = new StringBuilder();
+            for (; ; ){
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Escape){
+                    result = null;
+                    return false;
+                }
+                else if (key.Key == ConsoleKey.Enter){
+                    result = buf.ToString();
+                    return true;
+                }
+                else if (key.Key == ConsoleKey.Backspace && buf.Length > 0){
+                    buf.Remove(buf.Length -1, 1);
+                    Console.Write("\b \b");
+                }
+                else if (key.KeyChar != 0){
+                    buf.Append(key.KeyChar);
+                    Console.Write(key.KeyChar);
+                }
+            }
         }
 
     }
