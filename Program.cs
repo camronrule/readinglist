@@ -22,7 +22,7 @@ class Book{ //book
 
     public override string ToString()
     {
-        return ($"\nTitle: {Title} \nAuthor: {Author} \nProgress: {Progress}\n");
+        return ($"Title: {Title} \nAuthor: {Author} \nProgress: {Progress}");
     }
 }
 
@@ -35,7 +35,7 @@ class ReadingList{
     public static void AddBookToList(Book book, List<Book> list){
         BookList.Add(book);
         empty = false;
-        Console.WriteLine("\nBook added!");
+        Console.WriteLine($"\n{book.Title} by {book.Author} has been added to your readinglist.\n");
     }
 
     public static bool RemoveBook(Book book, List<Book> list){
@@ -74,8 +74,10 @@ class Menu{
     }
 
     private static void ConfirmBookInfo(Book book, List<Book> list){
-        Console.WriteLine("Is the following information about this book correct?");
+        Console.WriteLine("\nIs the following information about this book correct?");
+        Console.WriteLine("============================================");
         Console.WriteLine($"{book}");
+        Console.WriteLine("============================================\n");
         if (HelperConfirmationPrompt()){ //information is correct
             ReadingList.AddBookToList(book, list);
         }
@@ -146,7 +148,7 @@ class Menu{
             if (targetIndex > list.Count() || targetIndex < 1){ successfulParse = false; } //index out of range
             attempts++;
         } while (!successfulParse);
-        return targetIndex;
+        return targetIndex-1;
     }
 
     public static void ShowBooks(List<Book> list){
@@ -239,7 +241,7 @@ class Menu{
                 Menu.DisplayMenu(ReadingList.BookList);
             }
             while (!ReadingList.empty){
-                Menu.ShowBooks(ReadingList.BookList);
+                //Menu.ShowBooks(ReadingList.BookList);
                 Menu.DisplayMenu(ReadingList.BookList);
             }
         }
