@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System.ComponentModel;
+using System.Configuration;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.Serialization;
 
@@ -18,7 +19,6 @@ namespace VSreadinglist
         {
 
         }
-
 
         public override string ToString()
         {
@@ -330,29 +330,72 @@ namespace VSreadinglist
 
         }
 
-        /*
+        
         class UserData
         {
-            public UserData data;
-           
-            public void ClosingHandler(List<Book> list)
-            {
-                Properties.Settings1.Default.DefaultBooks = list;
-                Properties.Settings1.Default.DefaultBooks.Save();
+            public UserData user;
+            List<Book> new_list; //temporary list to hold loaded books and be handed to ReadingList
+
+            public UserData(List<Book> books) 
+            { 
+                new_list = books == null ? new() : books;
             }
 
-
-  
-            public static List<Book> OpeningHandler() { 
-                if (Properties.Settings1.Default.DefaultBooks == null)
+            public List<Book> LoadUserData()
+            {
+                if (Settings1.Default.titles is not null)
                 {
-                    return new List<Book>();
+
+                    int count = 0;
+                    int prog;
+
+                    //obtain book data from saved user data
+                    foreach (var b in Settings1.Default.titles)
+                    {
+                        Book temp = new();
+                        temp.Title = Settings1.Default.titles[count];
+                        temp.Author = Settings1.Default.authors[count];
+
+                        Int32.TryParse(Settings1.Default.progresses[count], out prog);
+                        temp.Progress = prog;
+
+                        new_list.Add(temp); //add this book into the temporary list
+
+                        count++; //increment indexer
+                    }
                 }
-                return Properties.Settings1.Default.DefaultBooks;
+
+                return new_list; //return the loaded list to main
+            }
+
+            public void SaveUserData(List<Book> books)
+            {
+                //remove currently stored data
+                if (Settings1.Default.titles is not null)
+                {
+                    Settings1.Default.titles.Clear();
+                    Settings1.Default.authors.Clear();
+                    Settings1.Default.progresses.Clear();
+                }
+                  
+
+                foreach (var b in books)
+                {
+                    Settings1.Default.titles = new();
+                    Settings1.Default.authors = new();
+                    Settings1.Default.progresses = new();
+
+
+                    Settings1.Default.titles.Add(b.Title);
+                    Settings1.Default.authors.Add(b.Author);
+                    Settings1.Default.progresses.Add(b.Progress.ToString());
+                }
+
+                Settings1.Default.Save();
             }
         }
 
-        */
+        
         
         class Program
         {
@@ -360,7 +403,10 @@ namespace VSreadinglist
 
             static void Main()
             {
-                _ = new ReadingList();
+                _ = new ReadingList(); //create ReadingList obj to give to UserData
+                UserData user = new UserData(ReadingList.BookList); //give reference to ReadingList to UserData
+                ReadingList.BookList = user.LoadUserData(); //obtain loaded books and add to user's ReadingList
+                
 
                 while (run)
                 {
@@ -374,6 +420,8 @@ namespace VSreadinglist
                         Menu.DisplayMenu(ReadingList.BookList);
                     }
                 }
+                //exiting program
+                user.SaveUserData(ReadingList.BookList); //save books to storage
             }
         }
 
