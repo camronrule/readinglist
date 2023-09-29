@@ -31,7 +31,7 @@
             bool successfulParse;
             do
             {
-                Console.WriteLine("Please enter your progress in the book: ");
+                Console.WriteLine("Please enter your progress in the book (as a percentage, from 0-100): ");
                 successfulParse = Int32.TryParse(Console.ReadLine(), out progress);
             } while (!successfulParse);
             return progress;
@@ -273,8 +273,3 @@
         }
     }
 }
-
-
-
-
-

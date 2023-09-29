@@ -8,7 +8,7 @@
         static void Main()
         {
             _ = new ReadingList(); //create ReadingList obj to give to UserData
-            UserData user = new UserData(ReadingList.BookList); //give reference to ReadingList to UserData
+            UserData user = new(ReadingList.BookList); //give reference to ReadingList to UserData
             ReadingList.BookList = user.LoadUserData(); //obtain loaded books and add to user's ReadingList
 
 
@@ -30,8 +30,3 @@
     }
 
 }
-
-
-
-
-
