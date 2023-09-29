@@ -17,7 +17,7 @@
 
         public override string ToString()
         {
-            return ($"Title: {Title} \nAuthor: {Author} \nProgress: {Progress}");
+            return ($"Title: {Title} \nAuthor: {Author} \nProgress: {Progress}%");
         }
     }
 
